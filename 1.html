@@ -3,36 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EBROMARES AJAW INTELLIGENCE</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://restcountries.com; connect-src 'self' https://restcountries.com http://localhost:8080;">
+    <title>E B R O M A R E S</title>
     <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        /* Reseteo del cuerpo para ocupar toda la pantalla sin barras de desplazamiento */
+        body {
+            background-color: #000; /* Fondo negro puro */
+            margin: 0; /* Sin márgenes exteriores */
+            padding: 0; /* Sin espaciado interior */
+            display: flex; /* Uso de flexbox para el diseño de la página */
+            height: 100vh; /* Ocupa el 100% de la altura de la ventana visible */
+            overflow: hidden; /* Oculta cualquier elemento que se desborde (quita el scroll) */
+        }
+
+        /* Contenedor principal que divide la pantalla en dos secciones */
+        .main-layout {
+            display: flex; /* Activa flexbox interno */
+            width: 100%; /* Ocupa todo el ancho */
+            height: 100%; /* Ocupa todo el alto */
+        }
+
+        /* Sección izquierda (Ocupa el 75% del espacio visual para el logo) */
+        .image-section {
+            flex: 3; /* Proporción de 3 partes del ancho total */
+            display: flex; /* Centrado del contenido interno */
+            justify-content: center; /* Alineación horizontal centrada */
+            align-items: center; /* Alineación vertical centrada */
+            border-right: 2px solid var(--border-glass); /* Línea divisoria derecha sutil */
+            background: radial-gradient(circle at center, #0a0a0a, #000); /* Fondo con ligero destello radial */
+        }
+
+        /* Contenedor que limita el tamaño del logo */
+        .image-placeholder {
+            max-width: 80%; /* No permite que la imagen sea más ancha que el 80% de su contenedor */
+            display: flex; /* Facilita el manejo de la imagen interna */
+            justify-content: center; /* Centra la imagen */
+        }
+
+        /* Estilos de la imagen del logo */
+        .main-image-content {
+            max-width: 100%; /* Se adapta al contenedor */
+            height: auto; /* Mantiene la proporción original */
+            object-fit: contain; /* Evita que la imagen se deforme o recorte */
+            filter: drop-shadow(0 0 20px var(--neon-glow)); /* Agrega un efecto de resplandor neón exterior */
+        }
+
+        /* Sección derecha (Ocupa el 25% del espacio para los botones) */
+        .sidebar-section {
+            flex: 1; /* Proporción de 1 parte del ancho total */
+            display: flex; /* Flexbox para organizar los botones */
+            flex-direction: column; /* Apila los botones de forma vertical */
+            justify-content: center; /* Centra el bloque de botones verticalmente */
+            align-items: center; /* Centra los botones horizontalmente */
+            padding: 40px; /* Espaciado interno generoso */
+            background-color: #030303; /* Fondo un tono más gris que el negro puro */
+            gap: 30px; /* Separación de 30px entre cada botón */
+        }
+
+        /* Estilo base compartido para los botones del panel lateral */
+        .btn-panel {
+            width: 100%; /* El botón ocupa todo el ancho disponible en la columna */
+            padding: 20px; /* Relleno amplio para mejorar el área táctil */
+            font-size: 1.2rem; /* Tamaño de texto mediano-grande */
+            font-family: "JetBrains Mono", monospace; /* Fuente de programación */
+            text-transform: uppercase; /* Fuerza el texto a mayúsculas */
+            font-weight: bold; /* Texto en negrita */
+            cursor: pointer; /* Cambia el cursor a una 'mano' interactiva */
+            border-radius: 8px; /* Esquinas ligeramente redondeadas */
+            transition: all 0.3s ease; /* Transición fluida para los efectos al pasar el cursor */
+            text-align: center; /* Centra el texto del botón */
+        }
+
+        /* Botón de navegación principal */
+        .btn-saber-mas {
+            background: transparent; /* Fondo transparente por defecto */
+            color: var(--neon-green); /* Texto verde neón */
+            border: 2px solid var(--neon-green); /* Borde verde neón */
+        }
+
+        /* Efecto al pasar el cursor sobre el botón principal */
+        .btn-saber-mas:hover {
+            background: var(--neon-green); /* El fondo se llena de verde */
+            color: #000; /* El texto cambia a negro para generar contraste */
+            box-shadow: 0 0 20px var(--neon-glow); /* Efecto de luz difuminada alrededor */
+        }
+
+        /* Botón secundario para descargas */
+        .btn-cv {
+            background: transparent; /* Fondo transparente por defecto */
+            color: #fff; /* Texto blanco por defecto */
+            border: 2px solid var(--wine-red); /* Borde rojo oscuro */
+        }
+
+        /* Efecto al pasar el cursor sobre el botón secundario */
+        .btn-cv:hover {
+            background: var(--wine-red); /* El fondo se llena de rojo */
+            box-shadow: 0 0 20px rgba(75, 15, 26, 0.8); /* Efecto de luz roja difuminada */
+        }
+
+        /* Diseño responsivo para pantallas de móviles (menos de 800px) */
+        @media (max-width: 800px) {
+            .main-layout {
+                flex-direction: column; /* Apila la imagen arriba y los botones abajo */
+            }
+            .image-section {
+                border-right: none; /* Elimina la línea divisoria vertical */
+                border-bottom: 2px solid var(--border-glass); /* Agrega una línea divisoria horizontal */
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="login-container">
-    <div class="lang-selector">
-        <label id="labelSeleccionaIdioma" for="language">Selecciona Idioma:</label>
-        <select id="language">
-            <option value="es">Español</option>
-            <option value="en">English</option>
-            <option value="zh">中文</option>
-            <option value="ru">Русский</option>
-            <option value="ar">العربية</option>
-            <option value="fa">فارسی</option>
-        </select>
-    </div>
-    <h2 id="title">Para Acceder:</h2>
+
+<div class="main-layout">
     
-    <form id="form">
-        <label id="labelNombre">Nombre</label>
-        <input type="text" id="nombre" required maxlength="50" pattern="[a-zA-ZÀ-ÿ\s]{2,50}">
+    <div class="image-section">
+        <div class="image-placeholder">
+            <img src="assets/logo.png" alt="Logo Escudo Familiar Ancestral" class="main-image-content">
+        </div>
+    </div>
 
-        <label id="labelApellido">Apellido</label>
-        <input type="text" id="apellido" required maxlength="50" pattern="[a-zA-ZÀ-ÿ\s]{2,50}">
+    <div class="sidebar-section">
+        <button class="btn-panel btn-saber-mas" onclick="window.location.href='2.html'">Saber Más</button>
+        <a href="assets/CV_EBROMARES.pdf" download="CV_EBROMARES.pdf" style="width: 100%; text-decoration: none;">
+            <button class="btn-panel btn-cv">Descargar CV</button>
+        </a>
+    </div>
 
-        <button type="submit" id="btnSubmit">Enviar</button>
-    </form>
 </div>
 
-<script src="JS/app.js"></script>
 </body>
 </html>
