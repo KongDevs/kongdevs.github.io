@@ -26,25 +26,56 @@ function drawMatrix() {
 setInterval(drawMatrix, 35);
 window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 
+
 // ==========================================
-// 2. DATA / DICCIONARIO MULTILINGÜE
+// FUNCIÓN GENERADORA DE CERTIFICACIONES DINÁMICAS
 // ==========================================
-// Función Helper para generar el bloque de certificaciones repetitivo en cualquier idioma
 function getCertificationsOutput(statusText, btnText) {
+    // 1. Convertimos el arreglo en un arreglo de objetos (clave-valor)
     const certs = [
-        "Microsoft Certified: Azure Fundamentals",
-        "CDP Certified Administrator - Private Cloud Base",
-        "Python 101 for Data Science",
-        "Kali Linux Seguridad Informática",
-        "Desarrollo Web (HTML5, CSS3, JS, PHP, MySQL)",
-        "Implementación de Scrum y XP"
+        {
+            name: "Microsoft Certified: Azure Fundamentals",
+            url: "https://learn.microsoft.com/es-mx/users/mariojafetebromaresfuentes-6996/credentials/24cf43dbf49a53f4?ref=https%3A%2F%2Fwww.linkedin.com%2F"
+        },
+        {
+            name: "CDP Certified Administrator - Private Cloud Base",
+            url: "https://www.credly.com/badges/4f8cbe38-dae9-4665-957a-8962f292e654/linked_in_profile" 
+        },
+        {
+            name: "Python 101 for Data Science IBM",
+            url: "https://courses.cognitiveclass.ai/certificates/fd301bfa58754ab2b7de4d74a9b76c8d" 
+        },
+        {
+            name: "Kali Linux. Cybersecurity. Penetration Testing. Hacking.",
+            url: "https://www.udemy.com/certificate/UC-1f9474f0-2033-4da5-8677-02b9ebb58281/"
+        },
+        {
+            name: "Full-Stack Web Development with HTML5, CSS3, JavaScript (AJAX), PHP, and MySQL.",
+            url: "https://www.udemy.com/certificate/UC-901739a4-9d21-49d6-bfd9-e27e6995ccc6/" 
+        },
+        {
+            name: "How to Implement Scrum and Extreme Programming (XP) in Your Company or Project.",
+            url: "https://www.udemy.com/certificate/UC-c61fddef-ba59-4a0d-8d51-dc8071465c70/"
+         },
     ];
+
     let output = ["<span class='section-title'>[ CERTIFICACIONES & STACK ]</span>"];
+    
+    // 2. Iteramos sobre los objetos extrayendo 'cert.name' y 'cert.url'
     certs.forEach(cert => {
-        // Sustituye '#' por el enlace real a tus certificados en producción
-        output.push(`<details class='cert-details'><summary>${cert}</summary><div class='cert-link-container'>↳ Status: <span style='color:#27c93f'>[ ${statusText} ]</span> <br><a href='#' target='_blank' class='btn-verify'>${btnText}</a></div></details>`);
+        output.push(
+            `<details class='cert-details'>
+                <summary>${cert.name}</summary>
+                <div class='cert-link-container'>
+                    ↳ Status: <span style='color:#27c93f'>[ ${statusText} ]</span> <br>
+                    <a href='${cert.url}' target='_blank' class='btn-verify'>${btnText}</a>
+                </div>
+            </details>`
+        );
     });
+    
     return output;
+
 }
 
 const cvTranslations = {
