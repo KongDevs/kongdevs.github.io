@@ -1,0 +1,165 @@
+/* =========================
+   🔥 VARIABLES GLOBALES (CORE)
+========================= */
+:root {
+    --bg-black: #000000;
+    --terminal-bg: rgba(10, 10, 10, 0.90); /* Fondo ligeramente más opaco para estilo Linux */
+    --neon-green: #00ff9f;
+    --dark-green: #003300;
+    --neon-glow: rgba(0, 255, 159, 0.6);
+    --border-glass: rgba(0, 255, 159, 0.3);
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-linux: 'Ubuntu', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body, html {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    background-color: var(--bg-black);
+    font-family: var(--font-mono); color: var(--neon-green);
+    overflow: hidden;
+}
+
+/* =========================
+   🌌 MATRIX BACKGROUND
+========================= */
+#matrix-bg {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 1; opacity: 0.35;
+}
+
+/* =========================
+   🧊 ESTRUCTURA DE LA VENTANA
+========================= */
+.terminal-wrapper {
+    position: relative; z-index: 10; display: flex;
+    justify-content: center; align-items: center;
+    width: 100%; height: 100%; padding: 15px;
+}
+
+.terminal-container {
+    width: 100%; max-width: 950px; height: 90vh;
+    background: var(--terminal-bg);
+    border: 1px solid var(--border-glass);
+    border-radius: 6px 6px 0 0; /* Esquinas Linux más agudas */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), inset 0 0 5px var(--border-glass);
+    display: flex; flex-direction: column;
+    backdrop-filter: blur(10px);
+}
+
+/* =========================
+   🐧 CABECERA KALI LINUX / UBUNTU
+========================= */
+.terminal-header {
+    background: linear-gradient(to bottom, #2b2b2b, #1e1e1e); /* Degradado gris Linux */
+    padding: 6px 10px;
+    border-bottom: 1px solid #000;
+    display: flex; justify-content: space-between; align-items: center;
+    border-radius: 6px 6px 0 0;
+    font-family: var(--font-linux); /* Fuente del sistema */
+}
+
+.terminal-title {
+    color: #dfdfdf; font-size: 0.9rem; font-weight: bold;
+    padding-left: 5px; text-shadow: 1px 1px 2px #000;
+}
+
+.header-controls {
+    display: flex; align-items: center; gap: 15px;
+}
+
+/* 🌐 Selector de Idiomas */
+.term-lang-select {
+    background: #111; color: #fff;
+    border: 1px solid #444; border-radius: 3px;
+    font-family: var(--font-linux); font-size: 0.8rem;
+    padding: 2px 6px; outline: none; cursor: pointer;
+}
+.term-lang-select:focus { border-color: var(--neon-green); }
+
+/* 🔲 Botones de control de ventana */
+.linux-buttons {
+    display: flex; gap: 2px;
+}
+
+.linux-btn {
+    display: flex; justify-content: center; align-items: center;
+    width: 28px; height: 28px; color: #b5b5b5;
+    cursor: pointer; font-size: 14px; font-weight: bold;
+    border-radius: 3px; transition: 0.2s;
+}
+
+.linux-btn:hover { background-color: #444; color: #fff; }
+.btn-close-linux:hover { background-color: #e81123; color: #fff; } /* Rojo cerrar */
+
+/* =========================
+   💻 CUERPO DE LA TERMINAL
+========================= */
+.terminal-body {
+    flex-grow: 1; padding: 20px; overflow-y: auto;
+    font-size: 15px; line-height: 1.6; scroll-behavior: smooth;
+}
+.terminal-body::-webkit-scrollbar { width: 8px; }
+.terminal-body::-webkit-scrollbar-track { background: #050505; }
+.terminal-body::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+/* Tipografía y resaltados */
+.prompt { color: #ff0055; font-weight: bold; } /* Usuario root */
+.cmd { color: #fff; font-weight: bold; }
+.output-line { margin-bottom: 8px; word-wrap: break-word; }
+.highlight { 
+    background-color: var(--dark-green); color: #fff; 
+    padding: 2px 6px; border-radius: 3px; border: 1px solid var(--border-glass); 
+}
+.section-title {
+    color: #ffbd2e; margin-top: 25px; margin-bottom: 10px;
+    border-bottom: 1px dashed var(--neon-green); display: inline-block; font-size: 1.1rem;
+}
+
+/* Animación del cursor de escritura */
+#cursor-line { margin-top: 10px; }
+.cursor {
+    display: inline-block; width: 10px; height: 18px;
+    background-color: var(--neon-green);
+    animation: blink 1s step-end infinite; vertical-align: middle;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* =========================
+   📂 ÁRBOL DE CERTIFICACIONES (Details/Summary)
+========================= */
+details.cert-details { margin-bottom: 8px; padding-left: 5px; }
+details.cert-details summary {
+    cursor: pointer; color: #fff; outline: none; user-select: none;
+    font-weight: bold; transition: color 0.2s;
+}
+details.cert-details summary:hover { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-glow); }
+details.cert-details summary::marker { content: "[+] "; color: var(--neon-green); }
+details[open].cert-details summary::marker { content: "[-] "; color: #ff0055; }
+
+.cert-link-container {
+    padding: 10px 0 10px 25px; border-left: 1px dashed var(--dark-green);
+    margin-left: 7px; margin-top: 5px; font-size: 0.9rem; color: #aaa;
+}
+
+/* Botones de acción */
+.btn-action, .btn-verify {
+    display: inline-block; padding: 6px 15px; margin-top: 10px; margin-right: 15px;
+    background: transparent; border: 1px solid var(--neon-green);
+    color: var(--neon-green); font-family: var(--font-mono); font-size: 13px;
+    cursor: pointer; text-decoration: none; border-radius: 4px; transition: 0.3s;
+}
+.btn-action:hover, .btn-verify:hover {
+    background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-glow);
+}
+
+/* =========================
+   🌍 RTL DINÁMICO (Árabe y Farsi)
+========================= */
+.terminal-body[dir="rtl"] { text-align: right; }
+.terminal-body[dir="rtl"] details.cert-details { padding-left: 0; padding-right: 5px; }
+.terminal-body[dir="rtl"] .cert-link-container {
+    border-left: none; border-right: 1px dashed var(--dark-green);
+    margin-left: 0; margin-right: 7px; padding: 10px 25px 10px 0;
+}

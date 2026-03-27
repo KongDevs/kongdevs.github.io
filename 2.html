@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>root@ebromares:~</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <canvas id="matrix-bg"></canvas>
+
+    <div class="terminal-wrapper">
+        <div class="terminal-container">
+            
+            <div class="terminal-header">
+                <div class="terminal-title" id="terminal-title">root@ebromares:~</div>
+                
+                <div class="header-controls">
+                    <select id="cv-language" class="term-lang-select" title="Cambiar Idioma">
+                        <option value="es">ES - Español</option>
+                        <option value="en">EN - English</option>
+                        <option value="de">DE - Deutsch</option>
+                        <option value="pt">PT - Português</option>
+                        <option value="ru">RU - Русский</option>
+                        <option value="ja">JA - 日本語</option>
+                        <option value="zh">ZH - 中文</option>
+                        <option value="ar">AR - العربية</option>
+                        <option value="fa">FA - فارسی</option>
+                    </select>
+                    
+                    <div class="linux-buttons">
+                        <span class="linux-btn" title="Minimizar">_</span>
+                        <span class="linux-btn" title="Maximizar">□</span>
+                        <span class="linux-btn btn-close-linux" onclick="window.location.href='1.html'" title="Cerrar">✕</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="terminal-body" id="terminal-body">
+                <div id="output"></div>
+                <div id="cursor-line">
+                    <span class="prompt" id="prompt-user">root@ebromares:~$ </span>
+                    <span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="JS/app.js"></script>
+</body>
+</html>
