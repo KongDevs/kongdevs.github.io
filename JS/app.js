@@ -57,9 +57,13 @@ function getCertificationsOutput(statusText, btnText) {
             name: "How to Implement Scrum and Extreme Programming (XP) in Your Company or Project.",
             url: "https://www.udemy.com/certificate/UC-c61fddef-ba59-4a0d-8d51-dc8071465c70/"
          },
+         {
+            name: "International English Test (IET) - English Language Certification",
+            url: "https://internationalenglishtest.com/verify-certificate/758BBBAA29-758BBBAA2E-758BBB81F4/"
+        },
     ];
 
-    let output = ["<span class='section-title'>[ CERTIFICACIONES & STACK ]</span>"];
+    let output = ["<span class='section-title'>[ CERTIFICACIONES ]</span>"];
     
     // 2. Iteramos sobre los objetos extrayendo 'cert.name' y 'cert.url'
     certs.forEach(cert => {
@@ -94,7 +98,6 @@ const cvTranslations = {
                 "==================================================",
                 "RESUMEN:", 
                 "> Apasionado por la tecnología y la innovación.",
-                "> Orgullosamente Politecnico",
                 "> Creativo y gran autodidacta", 
                 "> Capacidad analítica para el procesamiento de datos y arquitecturas cloud."
             ]},
