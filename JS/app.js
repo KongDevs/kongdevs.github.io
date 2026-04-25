@@ -57,13 +57,9 @@ function getCertificationsOutput(statusText, btnText) {
             name: "How to Implement Scrum and Extreme Programming (XP) in Your Company or Project.",
             url: "https://www.udemy.com/certificate/UC-c61fddef-ba59-4a0d-8d51-dc8071465c70/"
          },
-         {
-            name: "International English Test (IET) - English Language Certification",
-            url: "https://internationalenglishtest.com/verify-certificate/758BBBAA29-758BBBAA2E-758BBB81F4/"
-        },
     ];
 
-    let output = ["<span class='section-title'>[ CERTIFICACIONES ]</span>"];
+    let output = ["<span class='section-title'>[ CERTIFICACIONES & STACK ]</span>"];
     
     // 2. Iteramos sobre los objetos extrayendo 'cert.name' y 'cert.url'
     certs.forEach(cert => {
@@ -82,6 +78,164 @@ function getCertificationsOutput(statusText, btnText) {
 
 }
 
+// ==========================================
+// FUNCIÓN GENERADORA DE SKILLS GRÁFICOS
+// ==========================================
+function getSkillsOutput(t) {
+    const categories = [
+        {
+            label: t.catBigData,
+            skills: [
+                { name: "Apache Airflow",    pct: 90 },
+                { name: "Cloudera CDP/CDH",  pct: 88 },
+                { name: "HDFS / YARN",       pct: 80 },
+                { name: "Impala / SQL",      pct: 82 },
+                { name: "DBeaver / Hue",     pct: 78 },
+            ]
+        },
+        {
+            label: t.catCloud,
+            skills: [
+                { name: "Microsoft Azure",   pct: 65 },
+                { name: "Arquitectura Cloud", pct: 70 },
+                { name: "Lambda / Lakehouse", pct: 72 },
+            ]
+        },
+        {
+            label: t.catDev,
+            skills: [
+                { name: "Python",            pct: 85 },
+                { name: "HTML5 / CSS3 / JS", pct: 75 },
+                { name: "PHP / MySQL",       pct: 65 },
+                { name: "Draw.io / Diagramas", pct: 78 },
+            ]
+        },
+        {
+            label: t.catSec,
+            skills: [
+                { name: "Linux / Kali Linux", pct: 80 },
+                { name: "Ciberseguridad",     pct: 70 },
+                { name: "Pentesting",         pct: 62 },
+            ]
+        },
+        {
+            label: t.catSoft,
+            skills: [
+                { name: "Scrum / Agile",      pct: 75 },
+                { name: t.skillTeam,          pct: 88 },
+                { name: t.skillAnalysis,      pct: 85 },
+                { name: t.skillEnglish,       pct: 72 },
+            ]
+        },
+    ];
+
+    const uid = 'skills_' + Date.now();
+    let html = `<span class='section-title'>[ ${t.title} ]</span>
+<div class='skills-grid' id='${uid}'>`;
+
+    categories.forEach(cat => {
+        html += `<div class='skill-category-label'>${cat.label}</div>`;
+        cat.skills.forEach(sk => {
+            const color = sk.pct >= 85 ? '#00ff9f' : sk.pct >= 70 ? '#00ccff' : '#ffbd2e';
+            html += `
+<div class='skill-row'>
+  <div class='skill-header'>
+    <span class='skill-name'>${sk.name}</span>
+    <span class='skill-pct'>${sk.pct}%</span>
+  </div>
+  <div class='skill-bar-bg'>
+    <div class='skill-bar-fill' data-pct='${sk.pct}' style='background:linear-gradient(90deg,${color},#00ccff);'></div>
+  </div>
+</div>`;
+        });
+    });
+
+    html += `</div>`;
+
+    // Animación con IntersectionObserver al aparecer en pantalla
+    html += `<script>
+(function() {
+    function animateBars(containerId) {
+        var container = document.getElementById(containerId);
+        if (!container) return;
+        var bars = container.querySelectorAll('.skill-bar-fill');
+        bars.forEach(function(bar) {
+            bar.style.width = bar.getAttribute('data-pct') + '%';
+        });
+    }
+    var _uid = '${uid}';
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+            if (e.isIntersecting) { animateBars(_uid); observer.disconnect(); }
+        });
+    }, { threshold: 0.1 });
+    setTimeout(function() {
+        var el = document.getElementById(_uid);
+        if (el) observer.observe(el);
+    }, 200);
+})();
+<\/script>`;
+
+    return [html];
+}
+
+// ==========================================
+// FUNCIÓN GENERADORA DE EDUCACIÓN VISUAL
+// ==========================================
+function getEducacionOutput(t) {
+    const items = [
+        {
+            title:  t.edu1Title,
+            inst:   "UPIICSA — IPN",
+            period: "Ago 2017 – Jun 2023",
+            gpa:    "8.0",
+            tags:   t.edu1Tags
+        },
+        {
+            title:  t.edu2Title,
+            inst:   "Instituto Politécnico Nacional (IPN)",
+            period: "2013 – 2017",
+            gpa:    "8.0",
+            tags:   t.edu2Tags
+        },
+        {
+            title:  t.edu3Title,
+            inst:   "Fundación Carlos Slim",
+            period: "Nov 2019 – May 2022",
+            gpa:    "8.5",
+            tags:   t.edu3Tags
+        },
+        {
+            title:  t.edu4Title,
+            inst:   "CONDUSEF",
+            period: "Feb 2021 – May 2021",
+            gpa:    null,
+            tags:   t.edu4Tags
+        },
+    ];
+
+    let output = [`<span class='section-title'>[ ${t.title} ]</span>`, ""];
+
+    items.forEach(item => {
+        const gpaHtml = item.gpa
+            ? `<span class='edu-gpa'>★ GPA ${item.gpa}/10</span>`
+            : '';
+        const tagsHtml = item.tags.map(tag => `<span class='edu-tag'>${tag}</span>`).join('');
+        output.push(`
+<div class='edu-block'>
+  <div class='edu-title'>${item.title}</div>
+  <div class='edu-inst'>⬡ ${item.inst}</div>
+  <div class='edu-meta'>
+    <span>📅 ${item.period}</span>
+    ${gpaHtml}
+  </div>
+  <div style='margin-top:5px'>${tagsHtml}</div>
+</div>`);
+    });
+
+    return output;
+}
+
 const cvTranslations = {
     es: {
         dir: "ltr", title: "root@ebromares:~", prompt: "root@ebromares:~$ ",
@@ -98,9 +252,21 @@ const cvTranslations = {
                 "==================================================",
                 "RESUMEN:", 
                 "> Apasionado por la tecnología y la innovación.",
+                "> Orgullosamente Politecnico",
                 "> Creativo y gran autodidacta", 
                 "> Capacidad analítica para el procesamiento de datos y arquitecturas cloud."
             ]},
+            { cmd: "cat skills.sh", output: getSkillsOutput({
+                title:        "SKILLS & STACK TECNOLÓGICO",
+                catBigData:   "── Big Data & Orquestación",
+                catCloud:     "── Cloud & Arquitectura",
+                catDev:       "── Desarrollo & Scripting",
+                catSec:       "── Ciberseguridad & SO",
+                catSoft:      "── Soft Skills & Idiomas",
+                skillTeam:    "Trabajo en Equipo",
+                skillAnalysis:"Análisis de Datos",
+                skillEnglish: "Inglés (IET Certificado)",
+            })},
             { cmd: "cat experiencia.log", output: [
                 "<span class='section-title'>[ EXPERIENCIA PROFESIONAL ]</span>", "",
                 "<span class='highlight'>[+] INGENIERO DE DATOS | Martinexsa </span>", 
@@ -118,6 +284,17 @@ const cvTranslations = {
                 "> Diagnóstico de fallas en equipos de cómputo, ejecución de mantenimiento preventivo y correctivo, así como reemplazo de componentes dañados, asegurando la continuidad operativa y el rendimiento óptimo de los sistemas.",
                 "> Análisis y solución de problemas a nivel de software, incluyendo configuración, depuración y restauración de sistemas, aplicando metodologías de troubleshooting para minimizar tiempos de inactividad y mejorar la estabilidad del entorno."
             ]},
+            { cmd: "cat educacion.log", output: getEducacionOutput({
+                title:    "FORMACIÓN ACADÉMICA",
+                edu1Title:"Licenciatura en Ciencias de la Informatica",
+                edu1Tags: ["Gestión de Proyectos","Trabajo en Equipo","Metodologías Ágiles","Bases de Datos"],
+                edu2Title:"Tecnicatura en Sistemas Digitales",
+                edu2Tags: ["Sistemas Digitales","Trabajo en Equipo","Electrónica"],
+                edu3Title:"Diplomatura — Computer Technology & Systems",
+                edu3Tags: ["Computación","Sistemas","Tecnología"],
+                edu4Title:"Diplomatura — Educación Financiera",
+                edu4Tags: ["Finanzas","Educación Financiera"],
+            })},
             { cmd: "ls -l /certificaciones/", output: getCertificationsOutput("Validado", "Ejecutar_Verificación()") },
             { cmd: "echo 'Te invito a descargar mi cv si te gusto mi trabajo o contactarme por linkedin'", output: [ "<br><a href='assets/CV_EBROMARES.pdf' download class='btn-action'>[ Descargar_CV.pdf ]</a> <a href='https://www.linkedin.com/in/ebromaresmario/' target='_blank' class='btn-action'>[ Abrir_LinkedIn ]</a>" ] }
         ]
@@ -158,6 +335,28 @@ const cvTranslations = {
                 "> Computer equipment fault diagnosis, execution of preventive and corrective maintenance, as well as damaged component replacement, ensuring operational continuity and optimal system performance.",
                 "> Software-level problem analysis and resolution, including system configuration, debugging, and restoration, applying troubleshooting methodologies to minimize downtime and improve environment stability."
             ]},
+            { cmd: "cat skills.sh", output: getSkillsOutput({
+                title:        "SKILLS & TECH STACK",
+                catBigData:   "── Big Data & Orchestration",
+                catCloud:     "── Cloud & Architecture",
+                catDev:       "── Development & Scripting",
+                catSec:       "── Cybersecurity & OS",
+                catSoft:      "── Soft Skills & Languages",
+                skillTeam:    "Teamwork",
+                skillAnalysis:"Data Analysis",
+                skillEnglish: "English (IET Certified)",
+            })},
+            { cmd: "cat education.log", output: getEducacionOutput({
+                title:    "ACADEMIC BACKGROUND",
+                edu1Title:"Bachelor\'s Degree in Computer Science",
+                edu1Tags: ["Project Management","Teamwork","Agile","Databases"],
+                edu2Title:"Technical Degree in Digital Systems",
+                edu2Tags: ["Digital Systems","Teamwork","Electronics"],
+                edu3Title:"Diploma — Computer Technology & Systems",
+                edu3Tags: ["Computing","Systems","Technology"],
+                edu4Title:"Diploma — Financial Education",
+                edu4Tags: ["Finance","Financial Education"],
+            })},
             { cmd: "ls -l /certifications/", output: getCertificationsOutput("Validated", "Run_Verification()") },
             { cmd: "echo 'I invite you to download my CV if you liked my work or contact me via LinkedIn'", output: [ "<br><a href='assets/CV_EBROMARES.pdf' download class='btn-action'>[ Download_CV.pdf ]</a> <a href='https://www.linkedin.com/in/ebromaresmario/' target='_blank' class='btn-action'>[ Open_LinkedIn ]</a>" ] }
         ]
@@ -198,6 +397,28 @@ const cvTranslations = {
                 "> Fehlerdiagnose an Computern, Durchführung von vorbeugender und korrigierender Wartung sowie Austausch beschädigter Komponenten.",
                 "> Analyse und Lösung von Problemen auf Softwareebene, einschließlich Systemkonfiguration, Debugging und Wiederherstellung unter Anwendung von Troubleshooting-Methoden."
             ]},
+            { cmd: "cat skills.sh", output: getSkillsOutput({
+                title:        "SKILLS & TECH-STACK",
+                catBigData:   "── Big Data & Orchestrierung",
+                catCloud:     "── Cloud & Architektur",
+                catDev:       "── Entwicklung & Scripting",
+                catSec:       "── Cybersicherheit & BS",
+                catSoft:      "── Soft Skills & Sprachen",
+                skillTeam:    "Teamarbeit",
+                skillAnalysis:"Datenanalyse",
+                skillEnglish: "Englisch (IET Zertifiziert)",
+            })},
+            { cmd: "cat ausbildung.log", output: getEducacionOutput({
+                title:    "AKADEMISCHER WERDEGANG",
+                edu1Title:"Bachelor — Informatik",
+                edu1Tags: ["Projektmanagement","Teamarbeit","Agile","Datenbanken"],
+                edu2Title:"Techniker — Digitale Systeme",
+                edu2Tags: ["Digitale Systeme","Teamarbeit","Elektronik"],
+                edu3Title:"Diplom — Computertechnologie & Systeme",
+                edu3Tags: ["Computer","Systeme","Technologie"],
+                edu4Title:"Diplom — Finanzbildung",
+                edu4Tags: ["Finanzen","Finanzbildung"],
+            })},
             { cmd: "ls -l /zertifizierungen/", output: getCertificationsOutput("Verifiziert", "Überprüfung_ausführen()") },
             { cmd: "echo 'Laden Sie meinen Lebenslauf herunter oder kontaktieren Sie mich auf LinkedIn'", output: [ "<br><a href='assets/CV_EBROMARES.pdf' download class='btn-action'>[ Lebenslauf_herunterladen.pdf ]</a> <a href='https://www.linkedin.com/in/ebromaresmario/' target='_blank' class='btn-action'>[ LinkedIn_öffnen ]</a>" ] }
         ]
@@ -238,6 +459,28 @@ const cvTranslations = {
                 "> Diagnóstico de falhas em computadores, execução de manutenção preventiva e corretiva, bem como substituição de componentes danificados.",
                 "> Análise e resolução de problemas em nível de software, incluindo configuração de sistema, depuração e restauração, aplicando metodologias de solução de problemas."
             ]},
+            { cmd: "cat skills.sh", output: getSkillsOutput({
+                title:        "SKILLS & STACK TECNOLÓGICO",
+                catBigData:   "── Big Data & Orquestração",
+                catCloud:     "── Cloud & Arquitetura",
+                catDev:       "── Desenvolvimento & Scripting",
+                catSec:       "── Cibersegurança & SO",
+                catSoft:      "── Soft Skills & Idiomas",
+                skillTeam:    "Trabalho em Equipe",
+                skillAnalysis:"Análise de Dados",
+                skillEnglish: "Inglês (IET Certificado)",
+            })},
+            { cmd: "cat educacao.log", output: getEducacionOutput({
+                title:    "FORMAÇÃO ACADÊMICA",
+                edu1Title:"Licenciatura em Informática",
+                edu1Tags: ["Gestão de Projetos","Trabalho em Equipe","Ágil","Bancos de Dados"],
+                edu2Title:"Técnico em Sistemas Digitais",
+                edu2Tags: ["Sistemas Digitais","Trabalho em Equipe","Eletrônica"],
+                edu3Title:"Diploma — Tecnologia & Sistemas de Computadores",
+                edu3Tags: ["Computação","Sistemas","Tecnologia"],
+                edu4Title:"Diploma — Educação Financeira",
+                edu4Tags: ["Finanças","Educação Financeira"],
+            })},
             { cmd: "ls -l /certificacoes/", output: getCertificationsOutput("Validado", "Executar_Verificacao()") },
             { cmd: "echo 'Convido você a baixar meu currículo se gostou do meu trabalho ou me contate pelo LinkedIn'", output: [ "<br><a href='assets/CV_EBROMARES.pdf' download class='btn-action'>[ Baixar_CV.pdf ]</a> <a href='https://www.linkedin.com/in/ebromaresmario/' target='_blank' class='btn-action'>[ Abrir_LinkedIn ]</a>" ] }
         ]
@@ -278,6 +521,28 @@ const cvTranslations = {
                 "> Диагностика неисправностей компьютерного оборудования, выполнение профилактического и корректирующего обслуживания, а также замена поврежденных компонентов.",
                 "> Анализ и решение проблем на уровне программного обеспечения, включая конфигурацию системы, отладку и восстановление."
             ]},
+            { cmd: "cat skills.sh", output: getSkillsOutput({
+                title:        "НАВЫКИ И ТЕХНОЛОГИЧЕСКИЙ СТЕК",
+                catBigData:   "── Big Data и оркестрация",
+                catCloud:     "── Облако и архитектура",
+                catDev:       "── Разработка и скриптинг",
+                catSec:       "── Кибербезопасность и ОС",
+                catSoft:      "── Гибкие навыки и языки",
+                skillTeam:    "Работа в команде",
+                skillAnalysis:"Анализ данных",
+                skillEnglish: "Английский (IET Сертификат)",
+            })},
+            { cmd: "cat образование.log", output: getEducacionOutput({
+                title:    "АКАДЕМИЧЕСКОЕ ОБРАЗОВАНИЕ",
+                edu1Title:"Бакалавриат — Информатика",
+                edu1Tags: ["Управление проектами","Командная работа","Agile","Базы данных"],
+                edu2Title:"Техник — Цифровые системы",
+                edu2Tags: ["Цифровые системы","Командная работа","Электроника"],
+                edu3Title:"Диплом — Компьютерные технологии",
+                edu3Tags: ["Компьютеры","Системы","Технологии"],
+                edu4Title:"Диплом — Финансовое образование",
+                edu4Tags: ["Финансы","Финансовое образование"],
+            })},
             { cmd: "ls -l /certifications/", output: getCertificationsOutput("Подтверждено", "Запустить_проверку()") },
             { cmd: "echo 'Предлагаю скачать мое резюме, если вам понравилась моя работа, или связаться со мной в LinkedIn'", output: [ "<br><a href='assets/CV_EBROMARES.pdf' download class='btn-action'>[ Скачать_CV.pdf ]</a> <a href='https://www.linkedin.com/in/ebromaresmario/' target='_blank' class='btn-action'>[ Открыть_LinkedIn ]</a>" ] }
         ]
@@ -318,6 +583,28 @@ const cvTranslations = {
                 "> コンピュータ機器の障害診断、予防的および事後保全の実行、損傷したコンポーネントの交換。",
                 "> システム構成、デバッグ、復元を含むソフトウェアレベルの問題分析と解決。ダウンタイムを最小限に抑えるためのトラブルシューティング手法を適用します。"
             ]},
+            { cmd: "cat skills.sh", output: getSkillsOutput({
+                title:        "スキル & テックスタック",
+                catBigData:   "── ビッグデータ & オーケストレーション",
+                catCloud:     "── クラウド & アーキテクチャ",
+                catDev:       "── 開発 & スクリプティング",
+                catSec:       "── サイバーセキュリティ & OS",
+                catSoft:      "── ソフトスキル & 言語",
+                skillTeam:    "チームワーク",
+                skillAnalysis:"データ分析",
+                skillEnglish: "英語 (IET 認定)",
+            })},
+            { cmd: "cat 学歴.log", output: getEducacionOutput({
+                title:    "学歴",
+                edu1Title:"情報学学士号",
+                edu1Tags: ["プロジェクト管理","チームワーク","アジャイル","データベース"],
+                edu2Title:"デジタルシステム技術者",
+                edu2Tags: ["デジタルシステム","チームワーク","電子工学"],
+                edu3Title:"資格 — コンピュータ技術・システム",
+                edu3Tags: ["コンピュータ","システム","技術"],
+                edu4Title:"資格 — 金融教育",
+                edu4Tags: ["金融","金融教育"],
+            })},
             { cmd: "ls -l /certifications/", output: getCertificationsOutput("検証済み", "検証を実行する()") },
             { cmd: "echo '私の仕事に興味を持たれた方は履歴書をダウンロードするか、LinkedInでご連絡ください'", output: [ "<br><a href='assets/CV_EBROMARES.pdf' download class='btn-action'>[ 履歴書のダウンロード.pdf ]</a> <a href='https://www.linkedin.com/in/ebromaresmario/' target='_blank' class='btn-action'>[ LinkedInを開く ]</a>" ] }
         ]
@@ -358,6 +645,28 @@ const cvTranslations = {
                 "> 计算机设备故障诊断，执行预防性和纠正性维护，以及更换损坏的组件，确保运行的连续性和最佳系统性能。",
                 "> 软件级别的故障分析和解决，包括系统配置、调试和恢复，应用故障排除方法将停机时间降至最低并提高环境稳定性。"
             ]},
+            { cmd: "cat skills.sh", output: getSkillsOutput({
+                title:        "技能 & 技术栈",
+                catBigData:   "── 大数据 & 编排",
+                catCloud:     "── 云计算 & 架构",
+                catDev:       "── 开发 & 脚本",
+                catSec:       "── 网络安全 & 操作系统",
+                catSoft:      "── 软技能 & 语言",
+                skillTeam:    "团队协作",
+                skillAnalysis:"数据分析",
+                skillEnglish: "英语 (IET 认证)",
+            })},
+            { cmd: "cat 教育背景.log", output: getEducacionOutput({
+                title:    "教育背景",
+                edu1Title:"信息学学士学位",
+                edu1Tags: ["项目管理","团队协作","敏捷","数据库"],
+                edu2Title:"数字系统技术员",
+                edu2Tags: ["数字系统","团队协作","电子学"],
+                edu3Title:"文凭 — 计算机技术与系统",
+                edu3Tags: ["计算机","系统","技术"],
+                edu4Title:"文凭 — 金融教育",
+                edu4Tags: ["金融","金融教育"],
+            })},
             { cmd: "ls -l /certifications/", output: getCertificationsOutput("已验证", "运行验证()") },
             { cmd: "echo '如果您喜欢我的工作，欢迎下载我的简历或通过LinkedIn联系我'", output: [ "<br><a href='assets/CV_EBROMARES.pdf' download class='btn-action'>[ 下载简历.pdf ]</a> <a href='https://www.linkedin.com/in/ebromaresmario/' target='_blank' class='btn-action'>[ 打开_LinkedIn ]</a>" ] }
         ]
@@ -398,6 +707,28 @@ const cvTranslations = {
                 "> تشخيص أعطال أجهزة الكمبيوتر، وتنفيذ الصيانة الوقائية والتصحيحية، بالإضافة إلى استبدال المكونات التالفة، لضمان استمرارية التشغيل والأداء الأمثل للنظام.",
                 "> تحليل مشاكل البرمجيات وحلها، بما في ذلك تكوين النظام وتصحيح الأخطاء والاستعادة، وتطبيق منهجيات استكشاف الأخطاء وإصلاحها لتقليل وقت التوقف عن العمل وتحسين استقرار البيئة."
             ]},
+            { cmd: "cat skills.sh", output: getSkillsOutput({
+                title:        "المهارات والتقنيات",
+                catBigData:   "── البيانات الضخمة والتنسيق",
+                catCloud:     "── السحابة والبنية",
+                catDev:       "── التطوير والبرمجة النصية",
+                catSec:       "── الأمن السيبراني ونظام التشغيل",
+                catSoft:      "── المهارات الناعمة واللغات",
+                skillTeam:    "العمل الجماعي",
+                skillAnalysis:"تحليل البيانات",
+                skillEnglish: "الإنجليزية (IET معتمد)",
+            })},
+            { cmd: "cat التعليم.log", output: getEducacionOutput({
+                title:    "المسيرة الأكاديمية",
+                edu1Title:"ليسانس — علم المعلوماتية",
+                edu1Tags: ["إدارة المشاريع","العمل الجماعي","أجايل","قواعد البيانات"],
+                edu2Title:"تقني — الأنظمة الرقمية",
+                edu2Tags: ["الأنظمة الرقمية","العمل الجماعي","الإلكترونيات"],
+                edu3Title:"دبلوم — تكنولوجيا الحاسوب والأنظمة",
+                edu3Tags: ["حاسوب","أنظمة","تكنولوجيا"],
+                edu4Title:"دبلوم — التثقيف المالي",
+                edu4Tags: ["مالية","تثقيف مالي"],
+            })},
             { cmd: "ls -l /certifications/", output: getCertificationsOutput("موثق", "تشغيل_التحقق()") },
             { cmd: "echo 'أدعوك لتحميل سيرتي الذاتية إذا أعجبك عملي أو تواصل معي عبر لينكد إن'", output: [ "<br><a href='assets/CV_EBROMARES.pdf' download class='btn-action'>[ تحميل_السيرة_الذاتية.pdf ]</a> <a href='https://www.linkedin.com/in/ebromaresmario/' target='_blank' class='btn-action'>[ فتح_لينكد_إن ]</a>" ] }
         ]
@@ -438,6 +769,28 @@ const cvTranslations = {
                 "> تشخیص خطای تجهیزات کامپیوتری، اجرای تعمیر و نگهداری پیشگیرانه و اصلاحی، و همچنین تعویض قطعات آسیب دیده، تضمین تداوم عملکرد و عملکرد مطلوب سیستم.",
                 "> تجزیه و تحلیل و حل مسئله در سطح نرم افزار، از جمله پیکربندی سیستم، اشکال زدایی و بازیابی، به کارگیری متدولوژی های عیب یابی برای به حداقل رساندن زمان خرابی و بهبود پایداری محیط."
             ]},
+            { cmd: "cat skills.sh", output: getSkillsOutput({
+                title:        "مهارت‌ها و پشته فناوری",
+                catBigData:   "── داده‌های بزرگ و هماهنگ‌سازی",
+                catCloud:     "── ابر و معماری",
+                catDev:       "── توسعه و اسکریپت‌نویسی",
+                catSec:       "── امنیت سایبری و سیستم‌عامل",
+                catSoft:      "── مهارت‌های نرم و زبان‌ها",
+                skillTeam:    "کار تیمی",
+                skillAnalysis:"تحلیل داده",
+                skillEnglish: "انگلیسی (IET گواهی‌نامه)",
+            })},
+            { cmd: "cat تحصیلات.log", output: getEducacionOutput({
+                title:    "سوابق تحصیلی",
+                edu1Title:"لیسانس — انفورماتیک",
+                edu1Tags: ["مدیریت پروژه","کار تیمی","چابک","پایگاه داده"],
+                edu2Title:"تکنسین — سیستم‌های دیجیتال",
+                edu2Tags: ["سیستم‌های دیجیتال","کار تیمی","الکترونیک"],
+                edu3Title:"دیپلم — فناوری رایانه و سیستم‌ها",
+                edu3Tags: ["رایانه","سیستم‌ها","فناوری"],
+                edu4Title:"دیپلم — آموزش مالی",
+                edu4Tags: ["مالی","آموزش مالی"],
+            })},
             { cmd: "ls -l /certifications/", output: getCertificationsOutput("تایید شده", "اجرای_تایید()") },
             { cmd: "echo 'اگر از کار من خوشتان آمد، دعوت می کنم رزومه مرا دانلود کنید یا در لینکدین با من تماس بگیرید'", output: [ "<br><a href='assets/CV_EBROMARES.pdf' download class='btn-action'>[ دانلود_رزومه.pdf ]</a> <a href='https://www.linkedin.com/in/ebromaresmario/' target='_blank' class='btn-action'>[ باز_کردن_لینکدین ]</a>" ] }
         ]
