@@ -1,294 +1,653 @@
-/* =========================
-   🔥 VARIABLES GLOBALES (CORE)
-========================= */
+/*
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  ebromares.dev — Hoja de estilos global                     ║
+  ║  Compartida por: index.html y cv.html                       ║
+  ║  Estructura:                                                 ║
+  ║    1. Variables CSS (Design Tokens)                          ║
+  ║    2. Reset base                                             ║
+  ║    3. Canvas Matrix (fondo)                                  ║
+  ║    4. Ventana de terminal                                    ║
+  ║    5. Cabecera estilo Linux                                  ║
+  ║    6. Cuerpo de terminal (tipografía, scroll)                ║
+  ║    7. Certificaciones (details/summary)                      ║
+  ║    8. Skills — barras de progreso animadas                   ║
+  ║    9. Educación — tarjetas con timeline                      ║
+  ║   10. Botón Skip animación                                   ║
+  ║   11. Panel admin oculto (contador de visitas)               ║
+  ║   12. Accesibilidad (sr-only, focus)                         ║
+  ║   13. RTL dinámico (árabe y farsi)                           ║
+  ║   14. Responsivo (móvil < 600px)                             ║
+  ╚══════════════════════════════════════════════════════════════╝
+*/
+
+/* ═══════════════════════════════════════════════════════════════
+   1. VARIABLES CSS — Design Tokens
+   Centraliza todos los colores, tipografías y tamaños.
+   Cambiar una variable aquí actualiza toda la interfaz.
+═══════════════════════════════════════════════════════════════ */
 :root {
-    --bg-black: #000000;
-    --terminal-bg: rgba(10, 10, 10, 0.90); /* Fondo ligeramente más opaco para estilo Linux */
-    --neon-green: #00ff9f;
-    --dark-green: #003300;
-    --neon-glow: rgba(0, 255, 159, 0.6);
-    --border-glass: rgba(0, 255, 159, 0.3);
-    --font-mono: 'JetBrains Mono', monospace;
-    --font-linux: 'Ubuntu', sans-serif;
+  /* ── Fondos ── */
+  --bg-black:      #000000;
+  --terminal-bg:   rgba(10, 10, 10, 0.92);
+
+  /* ── Colores de acento ── */
+  --neon-green:    #00ff9f;              /* Color principal */
+  --dark-green:    #003300;             /* Fondo de highlights */
+  --neon-glow:     rgba(0, 255, 159, 0.6);  /* Halo/glow verde */
+  --border-glass:  rgba(0, 255, 159, 0.3);  /* Bordes sutiles */
+  --wine-red:      #8b0020;             /* Color botón CV (BUG CORREGIDO: antes no estaba definido) */
+  --wine-red-glow: rgba(139, 0, 32, 0.5);
+
+  /* ── Tipografías ── */
+  --font-mono:  'JetBrains Mono', 'Courier New', monospace;
+  --font-linux: 'Ubuntu', 'Segoe UI', sans-serif;
+
+  /* ── Velocidades de transición ── */
+  --transition-fast:   0.15s ease;
+  --transition-normal: 0.30s ease;
+  --transition-skill:  1.1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-* { box-sizing: border-box; }
-
-body, html {
-    margin: 0; padding: 0; width: 100%; height: 100%;
-    background-color: var(--bg-black);
-    font-family: var(--font-mono); color: var(--neon-green);
-    overflow: hidden;
+/* ═══════════════════════════════════════════════════════════════
+   2. RESET BASE
+   Normaliza comportamientos entre navegadores.
+═══════════════════════════════════════════════════════════════ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;  /* incluye padding y border en el ancho total */
+  margin: 0;
+  padding: 0;
 }
 
-/* =========================
-   🌌 MATRIX BACKGROUND
-========================= */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-black);
+  font-family: var(--font-mono);
+  color: var(--neon-green);
+  overflow: hidden;  /* sin scroll: el layout siempre cabe en pantalla */
+}
+
+/* Elimina outline feo en navegadores pero mantiene accesibilidad */
+:focus-visible {
+  outline: 2px solid var(--neon-green);
+  outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3. CANVAS MATRIX — Fondo animado
+   Se posiciona fijo detrás de todo el contenido (z-index: 1).
+   El JS lo dibuja cuadro a cuadro con requestAnimationFrame.
+═══════════════════════════════════════════════════════════════ */
 #matrix-bg {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    z-index: 1; opacity: 0.35;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  opacity: 0.30;  /* 30%: sutil, no distrae del contenido */
+  pointer-events: none;  /* no intercepta clicks */
 }
 
-/* =========================
-   🧊 ESTRUCTURA DE LA VENTANA
-========================= */
+/* ═══════════════════════════════════════════════════════════════
+   4. VENTANA DE TERMINAL — Estructura contenedora
+═══════════════════════════════════════════════════════════════ */
+/* Centra la ventana en toda la pantalla */
 .terminal-wrapper {
-    position: relative; z-index: 10; display: flex;
-    justify-content: center; align-items: center;
-    width: 100%; height: 100%; padding: 15px;
+  position: relative;
+  z-index: 10;  /* encima del canvas Matrix */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 15px;
 }
 
+/* La ventana en sí: tamaño máximo, fondo semitransparente, glassmorphism */
 .terminal-container {
-    width: 100%; max-width: 950px; height: 90vh;
-    background: var(--terminal-bg);
-    border: 1px solid var(--border-glass);
-    border-radius: 6px 6px 0 0; /* Esquinas Linux más agudas */
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), inset 0 0 5px var(--border-glass);
-    display: flex; flex-direction: column;
-    backdrop-filter: blur(10px);
+  width: 100%;
+  max-width: 960px;
+  height: 90vh;
+  background: var(--terminal-bg);
+  border: 1px solid var(--border-glass);
+  border-radius: 6px 6px 0 0;  /* esquinas superiores redondeadas, base plana */
+  box-shadow:
+    0 0 30px rgba(0, 0, 0, 0.9),       /* sombra exterior oscura */
+    inset 0 0 5px var(--border-glass);  /* brillo interior sutil */
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(10px);  /* efecto glassmorphism */
+  -webkit-backdrop-filter: blur(10px);
 }
 
-/* =========================
-   🐧 CABECERA KALI LINUX / UBUNTU
-========================= */
+/* ═══════════════════════════════════════════════════════════════
+   5. CABECERA ESTILO KALI LINUX / UBUNTU
+   Degradado gris oscuro con botones de control y selector de idioma.
+═══════════════════════════════════════════════════════════════ */
 .terminal-header {
-    background: linear-gradient(to bottom, #2b2b2b, #1e1e1e); /* Degradado gris Linux */
-    padding: 6px 10px;
-    border-bottom: 1px solid #000;
-    display: flex; justify-content: space-between; align-items: center;
-    border-radius: 6px 6px 0 0;
-    font-family: var(--font-linux); /* Fuente del sistema */
+  background: linear-gradient(to bottom, #2b2b2b, #1e1e1e);
+  padding: 6px 10px;
+  border-bottom: 1px solid #000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 6px 6px 0 0;
+  font-family: var(--font-linux);
+  flex-shrink: 0;  /* no se comprime cuando el cuerpo necesita espacio */
 }
 
+/* Título de la ventana (root@ebromares:~) */
 .terminal-title {
-    color: #dfdfdf; font-size: 0.9rem; font-weight: bold;
-    padding-left: 5px; text-shadow: 1px 1px 2px #000;
+  color: #dfdfdf;
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding-left: 5px;
+  text-shadow: 1px 1px 2px #000;
+  user-select: none;
 }
 
+/* Contenedor: selector idioma + botones de control */
 .header-controls {
-    display: flex; align-items: center; gap: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-/* 🌐 Selector de Idiomas */
+/* Selector de idioma — dropdown estilo terminal */
 .term-lang-select {
-    background: #111; color: #fff;
-    border: 1px solid #444; border-radius: 3px;
-    font-family: var(--font-linux); font-size: 0.8rem;
-    padding: 2px 6px; outline: none; cursor: pointer;
+  background: #111;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 3px;
+  font-family: var(--font-linux);
+  font-size: 0.75rem;
+  padding: 3px 6px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
 }
-.term-lang-select:focus { border-color: var(--neon-green); }
+.term-lang-select:focus,
+.term-lang-select:hover {
+  border-color: var(--neon-green);
+}
 
-/* 🔲 Botones de control de ventana */
+/* Botones de control de ventana (_  □  ✕) */
 .linux-buttons {
-    display: flex; gap: 2px;
+  display: flex;
+  gap: 2px;
 }
 
 .linux-btn {
-    display: flex; justify-content: center; align-items: center;
-    width: 28px; height: 28px; color: #b5b5b5;
-    cursor: pointer; font-size: 14px; font-weight: bold;
-    border-radius: 3px; transition: 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 28px;
+  height: 28px;
+  color: #b5b5b5;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 3px;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+  user-select: none;
 }
 
-.linux-btn:hover { background-color: #444; color: #fff; }
-.btn-close-linux:hover { background-color: #e81123; color: #fff; } /* Rojo cerrar */
+.linux-btn:hover            { background-color: #444; color: #fff; }
+.btn-close-linux:hover      { background-color: #e81123; color: #fff; }
 
-/* =========================
-   💻 CUERPO DE LA TERMINAL
-========================= */
+/* ═══════════════════════════════════════════════════════════════
+   6. CUERPO DE LA TERMINAL — Output + scroll
+═══════════════════════════════════════════════════════════════ */
 .terminal-body {
-    flex-grow: 1; padding: 20px; overflow-y: auto;
-    font-size: 15px; line-height: 1.6; scroll-behavior: smooth;
+  flex-grow: 1;       /* ocupa el espacio restante después del header */
+  padding: 20px;
+  overflow-y: auto;   /* scroll interno cuando el contenido desborda */
+  font-size: 14px;
+  line-height: 1.65;
+  scroll-behavior: smooth;
 }
-.terminal-body::-webkit-scrollbar { width: 8px; }
+
+/* Scrollbar personalizada (WebKit) */
+.terminal-body::-webkit-scrollbar       { width: 6px; }
 .terminal-body::-webkit-scrollbar-track { background: #050505; }
-.terminal-body::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+.terminal-body::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+.terminal-body::-webkit-scrollbar-thumb:hover { background: #444; }
 
-/* Tipografía y resaltados */
-.prompt { color: #ff0055; font-weight: bold; } /* Usuario root */
-.cmd { color: #fff; font-weight: bold; }
-.output-line { margin-bottom: 8px; word-wrap: break-word; }
-.highlight { 
-    background-color: var(--dark-green); color: #fff; 
-    padding: 2px 6px; border-radius: 3px; border: 1px solid var(--border-glass); 
+/* ── Tipografía y colores semánticos ── */
+.prompt      { color: #ff0055; font-weight: bold; }   /* usuario root en rojo */
+.cmd         { color: #ffffff; font-weight: bold; }   /* comandos en blanco */
+.output-line { margin-bottom: 6px; word-wrap: break-word; word-break: break-word; }
+
+/* Highlight: fondo oscuro + borde verde para campos tipo NOMBRE:, PERFIL: */
+.highlight {
+  background-color: var(--dark-green);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--border-glass);
 }
+
+/* Títulos de sección en amarillo con línea inferior */
 .section-title {
-    color: #ffbd2e; margin-top: 25px; margin-bottom: 10px;
-    border-bottom: 1px dashed var(--neon-green); display: inline-block; font-size: 1.1rem;
+  color: #ffbd2e;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed var(--neon-green);
+  display: inline-block;
+  font-size: 1.05rem;
+  font-weight: bold;
 }
 
-/* Animación del cursor de escritura */
-#cursor-line { margin-top: 10px; }
+/* ── Cursor parpadeante al final de la terminal ── */
+#cursor-line  { margin-top: 12px; }
 .cursor {
-    display: inline-block; width: 10px; height: 18px;
-    background-color: var(--neon-green);
-    animation: blink 1s step-end infinite; vertical-align: middle;
+  display: inline-block;
+  width: 10px;
+  height: 17px;
+  background-color: var(--neon-green);
+  vertical-align: middle;
+  animation: blink 1s step-end infinite;
 }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
 
-/* =========================
-   📂 ÁRBOL DE CERTIFICACIONES (Details/Summary)
-========================= */
-details.cert-details { margin-bottom: 8px; padding-left: 5px; }
+/* ─ Botones de acción (Descargar CV, Abrir LinkedIn) ─ */
+.btn-action,
+.btn-verify {
+  display: inline-block;
+  padding: 6px 14px;
+  margin-top: 8px;
+  margin-right: 12px;
+  background: transparent;
+  border: 1px solid var(--neon-green);
+  color: var(--neon-green);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color var(--transition-normal),
+              color var(--transition-normal),
+              box-shadow var(--transition-normal);
+}
+.btn-action:hover,
+.btn-verify:hover {
+  background: var(--neon-green);
+  color: #000;
+  box-shadow: 0 0 14px var(--neon-glow);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   7. CERTIFICACIONES — Árbol expandible (details/summary)
+   Patrón [+]/[-] para mostrar/ocultar el link de verificación.
+═══════════════════════════════════════════════════════════════ */
+details.cert-details {
+  margin-bottom: 6px;
+  padding-left: 5px;
+}
+
 details.cert-details summary {
-    cursor: pointer; color: #fff; outline: none; user-select: none;
-    font-weight: bold; transition: color 0.2s;
+  cursor: pointer;
+  color: #fff;
+  outline: none;
+  user-select: none;
+  font-weight: bold;
+  transition: color var(--transition-fast);
+  list-style: none;  /* elimina el triángulo nativo */
 }
-details.cert-details summary:hover { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-glow); }
-details.cert-details summary::marker { content: "[+] "; color: var(--neon-green); }
-details[open].cert-details summary::marker { content: "[-] "; color: #ff0055; }
 
+/* Marker personalizado [+] / [-] */
+details.cert-details summary::before        { content: "[+] "; color: var(--neon-green); }
+details[open].cert-details summary::before  { content: "[-] "; color: #ff0055; }
+
+details.cert-details summary:hover {
+  color: var(--neon-green);
+  text-shadow: 0 0 8px var(--neon-glow);
+}
+
+/* Contenido expandido: línea vertical izquierda + padding */
 .cert-link-container {
-    padding: 10px 0 10px 25px; border-left: 1px dashed var(--dark-green);
-    margin-left: 7px; margin-top: 5px; font-size: 0.9rem; color: #aaa;
+  padding: 8px 0 8px 22px;
+  border-left: 1px dashed var(--dark-green);
+  margin-left: 6px;
+  margin-top: 4px;
+  font-size: 0.88rem;
+  color: #aaa;
 }
 
-/* Botones de acción */
-.btn-action, .btn-verify {
-    display: inline-block; padding: 6px 15px; margin-top: 10px; margin-right: 15px;
-    background: transparent; border: 1px solid var(--neon-green);
-    color: var(--neon-green); font-family: var(--font-mono); font-size: 13px;
-    cursor: pointer; text-decoration: none; border-radius: 4px; transition: 0.3s;
-}
-.btn-action:hover, .btn-verify:hover {
-    background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-glow);
-}
+/* ═══════════════════════════════════════════════════════════════
+   8. SKILLS — Barras de progreso animadas
+   
+   CÓMO FUNCIONA LA ANIMACIÓN:
+   1. Las barras inician en width:0% (definido en CSS).
+   2. JS añade los elementos al DOM con data-pct="XX".
+   3. Inmediatamente después, JS llama a activateSkillBars().
+   4. activateSkillBars() usa doble requestAnimationFrame para
+      garantizar que el navegador pintó el estado inicial (0%)
+      antes de aplicar el estado final (XX%).
+   5. La transición CSS (--transition-skill) hace la animación.
+   
+   POR QUÉ NO USAMOS <script> EN innerHTML:
+   Los navegadores bloquean scripts inyectados via innerHTML
+   por seguridad (política XSS). El enfoque correcto es
+   activar desde el motor JS principal.
+═══════════════════════════════════════════════════════════════ */
 
-/* =========================
-   📊 SKILLS GRÁFICOS (Barras de progreso)
-========================= */
+/* Grid de 2 columnas para las categorías de skills */
 .skills-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px 30px;
-    margin-top: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 28px;
+  margin-top: 6px;
 }
 
+/* Una fila de skill: nombre + porcentaje arriba, barra abajo */
 .skill-row {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    margin-bottom: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 8px;
 }
 
+/* Encabezado de la barra: nombre a la izquierda, % a la derecha */
 .skill-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 11.5px;
 }
 
-.skill-name { color: #fff; font-weight: bold; }
-.skill-pct  { color: var(--neon-green); font-size: 11px; }
+.skill-name { color: #e8e8e8; font-weight: 600; }
+.skill-pct  { color: var(--neon-green); font-size: 10.5px; font-weight: 700; }
 
+/* Fondo gris de la barra */
 .skill-bar-bg {
-    width: 100%;
-    height: 6px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 3px;
-    overflow: hidden;
-    border: 1px solid rgba(0,255,159,0.1);
+  width: 100%;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 255, 159, 0.08);
 }
 
+/* Relleno animado de la barra — INICIA EN 0%, JS la lleva al valor real */
 .skill-bar-fill {
-    height: 100%;
-    border-radius: 3px;
-    background: linear-gradient(90deg, #00ff9f, #00ccff);
-    box-shadow: 0 0 6px rgba(0,255,159,0.5);
-    width: 0%;
-    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+  border-radius: 3px;
+  width: 0%;  /* IMPORTANTE: empieza en 0 para que la transición sea visible */
+  transition: width var(--transition-skill);
+  /* El color real se aplica inline por JS según el nivel del skill */
+  background: linear-gradient(90deg, var(--neon-green), #00ccff);
+  box-shadow: 0 0 5px rgba(0, 255, 159, 0.4);
 }
 
+/* Etiqueta de categoría (Big Data, Cloud, etc.) — ocupa las 2 columnas */
 .skill-category-label {
-    color: #ffbd2e;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 10px 0 4px;
-    border-bottom: 1px dashed rgba(255,189,46,0.3);
-    padding-bottom: 2px;
-    grid-column: 1 / -1;
+  grid-column: 1 / -1;
+  color: #ffbd2e;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin: 10px 0 4px;
+  padding-bottom: 3px;
+  border-bottom: 1px dashed rgba(255, 189, 46, 0.25);
 }
 
-/* =========================
-   🎓 EDUCACIÓN VISUAL MEJORADA
-========================= */
+/* ═══════════════════════════════════════════════════════════════
+   9. EDUCACIÓN — Tarjetas con timeline vertical
+   
+   Cada entrada educativa tiene:
+   - Línea vertical izquierda (borde)
+   - Punto circular brillante en el timeline
+   - Título, institución, fecha, GPA y tags
+═══════════════════════════════════════════════════════════════ */
 .edu-block {
-    border-left: 2px solid rgba(0,255,159,0.3);
-    padding-left: 14px;
-    margin-bottom: 16px;
-    margin-left: 4px;
-    position: relative;
+  border-left: 2px solid rgba(0, 255, 159, 0.25);
+  padding-left: 14px;
+  margin-bottom: 18px;
+  margin-left: 4px;
+  position: relative;
 }
 
+/* Punto del timeline: círculo verde brillante */
 .edu-block::before {
-    content: '';
-    position: absolute;
-    left: -5px;
-    top: 4px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--neon-green);
-    box-shadow: 0 0 8px var(--neon-glow);
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon-green);
+  box-shadow: 0 0 8px var(--neon-glow);
 }
 
+/* Nombre del grado/diplomatura */
 .edu-title {
-    color: #fff;
-    font-weight: bold;
-    font-size: 13px;
-    margin-bottom: 2px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 12.5px;
+  margin-bottom: 2px;
 }
 
+/* Nombre de la institución */
 .edu-inst {
-    color: var(--neon-green);
-    font-size: 12px;
-    margin-bottom: 3px;
+  color: var(--neon-green);
+  font-size: 11.5px;
+  margin-bottom: 3px;
 }
 
+/* Fila de metadatos: fecha + GPA */
 .edu-meta {
-    display: flex;
-    gap: 18px;
-    font-size: 11px;
-    color: #888;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+  color: #888;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
-.edu-meta span { display: flex; align-items: center; gap: 4px; }
-.edu-gpa  { color: #27c93f !important; font-weight: bold; }
-.edu-tag  {
-    display: inline-block;
-    background: rgba(0,255,159,0.07);
-    border: 1px solid rgba(0,255,159,0.2);
-    color: #aaa;
-    font-size: 10px;
-    padding: 1px 7px;
-    border-radius: 10px;
-    margin-top: 5px;
-    margin-right: 4px;
+/* GPA en verde destacado */
+.edu-gpa {
+  color: #27c93f !important;
+  font-weight: bold;
 }
 
-/* =========================
-   🌍 RTL DINÁMICO (Árabe y Farsi)
-========================= */
-.terminal-body[dir="rtl"] { text-align: right; }
-.terminal-body[dir="rtl"] details.cert-details { padding-left: 0; padding-right: 5px; }
+/* Tags de habilidades: pastillas con borde verde sutil */
+.edu-tag {
+  display: inline-block;
+  background: rgba(0, 255, 159, 0.06);
+  border: 1px solid rgba(0, 255, 159, 0.18);
+  color: #999;
+  font-size: 9.5px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  margin-top: 5px;
+  margin-right: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   10. BOTÓN SKIP — Omitir animación de escritura
+   Aparece 1.5s después de cargar, permite ver todo el contenido
+   inmediatamente sin esperar los ~15s de animación.
+═══════════════════════════════════════════════════════════════ */
+#skip-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid var(--border-glass);
+  color: #888;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+
+  /* Oculto inicialmente; el JS lo muestra con retraso */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, color var(--transition-fast), border-color var(--transition-fast);
+}
+
+#skip-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#skip-btn:hover {
+  color: var(--neon-green);
+  border-color: var(--neon-green);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   11. PANEL ADMIN OCULTO — Contador de visitas
+   Solo visible con el atajo de teclado: Ctrl + Alt + V
+   No aparece en ningún lugar visible de la página.
+═══════════════════════════════════════════════════════════════ */
+#admin-panel {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 9999;
+
+  background: rgba(0, 5, 0, 0.95);
+  border: 1px solid var(--neon-green);
+  border-radius: 6px;
+  padding: 14px 18px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--neon-green);
+  min-width: 220px;
+
+  box-shadow: 0 0 20px var(--neon-glow);
+
+  /* Oculto por defecto */
+  display: none;
+}
+
+#admin-panel.visible { display: block; }
+
+#admin-panel h4 {
+  color: #ffbd2e;
+  font-size: 11px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed #333;
+  padding-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#admin-panel .stat-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  color: #aaa;
+}
+
+#admin-panel .stat-row span:last-child {
+  color: var(--neon-green);
+  font-weight: bold;
+}
+
+#admin-panel .admin-close {
+  margin-top: 10px;
+  font-size: 10px;
+  color: #555;
+  text-align: center;
+  cursor: pointer;
+}
+#admin-panel .admin-close:hover { color: #ff0055; }
+
+/* ═══════════════════════════════════════════════════════════════
+   12. ACCESIBILIDAD
+   sr-only: oculta visualmente pero mantiene para lectores de pantalla.
+═══════════════════════════════════════════════════════════════ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   13. RTL DINÁMICO — Árabe (ar) y Farsi (fa)
+   Cuando el terminal-body tiene dir="rtl", espeja el layout:
+   - Texto alineado a la derecha
+   - Bordes de timeline espejados
+   - Gradiente de barras invertido
+═══════════════════════════════════════════════════════════════ */
+.terminal-body[dir="rtl"] {
+  text-align: right;
+}
+
+/* Certificaciones: borde a la derecha en RTL */
+.terminal-body[dir="rtl"] details.cert-details {
+  padding-left: 0;
+  padding-right: 5px;
+}
 .terminal-body[dir="rtl"] .cert-link-container {
-    border-left: none; border-right: 1px dashed var(--dark-green);
-    margin-left: 0; margin-right: 7px; padding: 10px 25px 10px 0;
+  border-left: none;
+  border-right: 1px dashed var(--dark-green);
+  margin-left: 0;
+  margin-right: 6px;
+  padding: 8px 22px 8px 0;
 }
+
+/* Barras de skills: gradiente de derecha a izquierda en RTL */
 .terminal-body[dir="rtl"] .skill-bar-fill {
-    background: linear-gradient(270deg, #00ff9f, #00ccff);
+  background: linear-gradient(270deg, var(--neon-green), #00ccff);
 }
+
+/* Educación: timeline al lado derecho en RTL */
 .terminal-body[dir="rtl"] .edu-block {
-    border-left: none;
-    border-right: 2px solid rgba(0,255,159,0.3);
-    padding-left: 0;
-    padding-right: 14px;
-    margin-left: 0;
-    margin-right: 4px;
+  border-left: none;
+  border-right: 2px solid rgba(0, 255, 159, 0.25);
+  padding-left: 0;
+  padding-right: 14px;
+  margin-left: 0;
+  margin-right: 4px;
 }
 .terminal-body[dir="rtl"] .edu-block::before {
-    left: auto;
-    right: -5px;
+  left: auto;
+  right: -5px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   14. RESPONSIVO — Móvil (< 600px)
+   En pantallas pequeñas: skills a 1 columna, fuente más pequeña.
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  /* Skills: de 2 columnas a 1 columna */
+  .skills-grid {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  /* Terminal: más pequeña y sin padding excesivo */
+  .terminal-body       { padding: 12px; font-size: 12px; }
+  .terminal-container  { height: 95vh; }
+  .terminal-wrapper    { padding: 5px; }
+
+  /* Header: más compacto */
+  .terminal-header     { padding: 4px 8px; }
+  .term-lang-select    { font-size: 0.7rem; }
+  .linux-btn           { width: 22px; height: 22px; font-size: 12px; }
+
+  /* Botón Skip: arriba del panel en móvil */
+  #skip-btn { bottom: 10px; right: 10px; }
+  #admin-panel { left: 10px; bottom: 10px; min-width: 180px; }
 }
