@@ -252,7 +252,7 @@ const CERTIFICATIONS = [
  * @returns {string[]} array de strings HTML listos para printLine
  */
 function getCertificationsOutput(statusText, btnText) {
-  const lines = ["<span class='section-title'>[ CERTIFICACIONES & STACK ]</span>"];
+  const lines = ["<span class='section-title'>[ CERTIFICACIONES ]</span>"];
 
   CERTIFICATIONS.forEach(cert => {
     /* SEGURIDAD: escapamos el nombre para prevenir XSS si alguien
@@ -326,7 +326,6 @@ const SKILL_CATEGORIES = [
     skills: [
       { name: 'Linux / Kali Linux', pct: 82 },
       { name: 'Windows Server',     pct: 90 },
-      { name: 'Pentesting Básico',  pct: 62 },
     ],
   },
   {
@@ -502,7 +501,6 @@ const CV_TRANSLATIONS = {
         '══════════════════════════════════════════════════',
         'RESUMEN:',
         '> Apasionado por la tecnología y la innovación.',
-        '> Orgullosamente Politécnico (IPN — UPIICSA)',
         '> Creativo, analítico y gran autodidacta.',
         '> Capacidad para el procesamiento de datos y arquitecturas cloud.',
       ]},
@@ -573,7 +571,6 @@ const CV_TRANSLATIONS = {
         '══════════════════════════════════════════════════',
         'SUMMARY:',
         '> Passionate about technology and innovation.',
-        '> Proudly Polytechnic (IPN — UPIICSA)',
         '> Creative, analytical, and highly self-taught.',
         '> Skilled in data processing and cloud architectures.',
       ]},
@@ -644,7 +641,6 @@ const CV_TRANSLATIONS = {
         '══════════════════════════════════════════════════',
         'ZUSAMMENFASSUNG:',
         '> Leidenschaft für Technologie und Innovation.',
-        '> Stolzer Absolvent des IPN — UPIICSA',
         '> Kreativ, analytisch und sehr autodidaktisch.',
         '> Expertise in Datenverarbeitung und Cloud-Architekturen.',
       ]},
@@ -715,7 +711,6 @@ const CV_TRANSLATIONS = {
         '══════════════════════════════════════════════════',
         'RESUMO:',
         '> Apaixonado por tecnologia e inovação.',
-        '> Orgulhosamente Politécnico (IPN — UPIICSA)',
         '> Criativo, analítico e altamente autodidata.',
         '> Capacidade para processamento de dados e arquiteturas em nuvem.',
       ]},
@@ -786,7 +781,6 @@ const CV_TRANSLATIONS = {
         '══════════════════════════════════════════════════',
         'РЕЗЮМЕ:',
         '> Увлечён технологиями и инновациями.',
-        '> Выпускник IPN — UPIICSA (Мехико)',
         '> Творческий, аналитический и способный к самообучению.',
         '> Опыт в обработке данных и облачных архитектурах.',
       ]},
@@ -857,7 +851,6 @@ const CV_TRANSLATIONS = {
         '══════════════════════════════════════════════════',
         '概要:',
         '> テクノロジーとイノベーションへの情熱。',
-        '> IPN — UPIICSA の誇り高き卒業生。',
         '> 創造的、分析的、高い自己学習能力。',
         '> データ処理とクラウドアーキテクチャへの深い理解。',
       ]},
