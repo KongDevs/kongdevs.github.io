@@ -4,19 +4,26 @@
    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E B R O M A R E S</title>
+    <!-- Enlace a la hoja de estilos externa -->
     <link rel="stylesheet" href="styles.css">
     
+    <!-- Metadatos de indexación y SEO -->
     <meta name="description" content="Portafolio de Mario Jafet Ebromares Fuentes — Data Engineer especializado en Apache Airflow, Cloudera, Python y arquitecturas Cloud. IPN. CDMX, México.">
     <meta name="keywords" content="Data Engineer, Apache Airflow, Cloudera, Python, HDFS, Azure, Big Data, Ciberseguridad, Kali Linux, IPN, Politécnico, CDMX, México">
     <meta name="author" content="Mario Jafet Ebromares Fuentes">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://kongdevs.github.io/">
 
+    <!-- Metadatos Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://kongdevs.github.io/">
     <meta property="og:title" content="Mario Jafet Ebromares | Data Engineer">
     
     <style>
+        /* ==============================================================================
+           HOJA DE ESTILOS INTERNA (BASE Y ESTRUCTURA DOM)
+           ============================================================================== */
+           
         /* Reseteo del cuerpo para ocupar toda la pantalla sin barras de desplazamiento */
         body {
             background-color: #000; /* Fondo negro puro */
@@ -68,7 +75,7 @@
             align-items: center; /* Centra los botones horizontalmente */
             padding: 40px; /* Espaciado interno generoso */
             background-color: #000700; /* Fondo un tono más gris que el negro puro */
-            gap: 50px; /* Separación de 30px entre cada botón */
+            gap: 50px; /* Separación de 50px entre cada botón */
         }
 
         /* Estilo base compartido para los botones del panel lateral */
@@ -99,10 +106,10 @@
             box-shadow: 0 0 20px var(--neon-glow); /* Efecto de luz difuminada alrededor */
         }
 
-        /* Botón secundario para descargas */
+        /* Botón secundario para descargas y links externos */
         .btn-cv {
             background: transparent; /* Fondo transparente por defecto */
-            color: var(--neon-green); /* Texto blanco por defecto */
+            color: var(--neon-green); /* Texto verde por defecto */
             border: 2px solid var(--wine-red); /* Borde rojo oscuro */
         }
 
@@ -112,14 +119,60 @@
             box-shadow: 0 0 20px rgb(99, 4, 21); /* Efecto de luz roja difuminada */
         }
 
-        /* Diseño responsivo para pantallas de móviles (menos de 800px) */
+        /* Parche de normalización para anclas comportándose como botones (Mitigación A11y) */
+        a.btn-panel {
+            display: block; /* Fuerza a ocupar el 100% del contenedor */
+            text-decoration: none; /* Elimina el subrayado por defecto */
+            box-sizing: border-box; /* Previene desbordamientos */
+        }
+
+        /* ==============================================================================
+           RUTINAS DE ESCALABILIDAD PERIMETRAL (RESPONSIVE DESIGN)
+           ============================================================================== */
+
+        /* Terminales de alta resolución (Smart TVs / Monitores Ultrawide) */
+        @media (min-width: 1920px) {
+            .btn-panel {
+                font-size: 1.8rem; /* Tipografía escalada */
+                padding: 30px;
+            }
+            .sidebar-section {
+                gap: 60px;
+            }
+        }
+
+        /* Terminales medias (Tablets en portrait / Laptops pequeñas) */
+        @media (max-width: 1024px) {
+            .sidebar-section {
+                gap: 30px; /* Reducción táctica del espacio para evitar scroll */
+                padding: 20px;
+            }
+            .btn-panel {
+                font-size: 1rem;
+            }
+        }
+
+        /* Terminales Móviles (Smartphones) - Refactorización de topología */
         @media (max-width: 800px) {
             .main-layout {
-                flex-direction: column; /* Apila la imagen arriba y los botones abajo */
+                flex-direction: column; /* Apilamiento vertical */
             }
             .image-section {
-                border-right: none; /* Elimina la línea divisoria vertical */
-                border-bottom: 2px solid var(--border-glass); /* Agrega una línea divisoria horizontal */
+                border-right: none; 
+                border-bottom: 2px solid var(--border-glass); 
+                flex: 1; /* Distribución equitativa */
+                min-height: 40vh; /* Asegura visualización ininterrumpida del logo */
+            }
+            .sidebar-section {
+                flex: 1; 
+                padding: 20px;
+                gap: 15px; /* Compresión de botones para interfaces táctiles compactas */
+                justify-content: flex-start; /* Alineación al bloque superior */
+                padding-top: 30px;
+            }
+            .btn-panel {
+                font-size: 1rem;
+                padding: 15px;
             }
         }
     </style>
@@ -130,21 +183,16 @@
     
     <div class="image-section">
         <div class="image-placeholder">
-            <img src="assets/logo.png"  class="main-image-content">
+            <img src="assets/logo.png" class="main-image-content" alt="Logo E B R O M A R E S">
         </div>
     </div>
 
     <div class="sidebar-section">
+        <!-- Interfaz refactorizada, evasión de anidamiento inseguro de etiquetas (No button inside a) -->
         <button class="btn-panel btn-saber-mas" onclick="window.location.href='cv.html'">Saber Más</button>
-        <a href="assets/CV_EBROMARES.pdf" download="CV_EBROMARES.pdf" style="width: 100%; text-decoration: none;">
-            <button class="btn-panel btn-cv">Descargar CV</button>
-        </a>
-        <a href="https://github.com/KongDevs" target="_blank" rel="noopener noreferrer" class="btn-panel btn-github" style="width: 100%; text-decoration: none;">
-            <button class="btn-panel btn-cv">GitHub</button>
-        </a>
-        <a href="https://www.linkedin.com/in/ebromaresmario/" target="_blank" rel="noopener noreferrer" class="btn-panel btn-linkedin" >
-            <button class="btn-panel btn-cv">LinkedIN</button>
-        </a>
+        <a href="assets/CV_EBROMARES.pdf" download="CV_EBROMARES.pdf" class="btn-panel btn-cv">Descargar CV</a>
+        <a href="https://github.com/KongDevs" target="_blank" rel="noopener noreferrer" class="btn-panel btn-cv btn-github">GitHub</a>
+        <a href="https://www.linkedin.com/in/ebromaresmario/" target="_blank" rel="noopener noreferrer" class="btn-panel btn-cv btn-linkedin">LinkedIN</a>
     </div>
 
 </div>
